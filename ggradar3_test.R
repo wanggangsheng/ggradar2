@@ -6,21 +6,23 @@
 #' (1) add variable 'grid.n' = number of grids/circles; 
 #' (2) allow to generate multiple (>3) girds/circles (ggradar only generate 3 circles: min/mid/max)
 #' (3) allow to assign 'expression' to 'axis.labels', e.g., superscript, subscript, bolditalic
+#' (4) delete "font.radar" to avoid errors in "font" when plot is saved to a file
 #' based on ggradar developed by Ricardo Bion
 
 # setwd("/Users/wgs/ownCloud/Rcode/ggradar2")
-# source("ggradar2_test.R")
+# source("ggradar3_test.R")
 
 #Clean up Environment
 rm(list = ls())
 library(ggplot2)
-source("ggradar2.R")
+source("ggradar3.R")
 
 path <- getwd()
 dir_io <- "input_data"
 
 grid.line.color <-rep(c("gray","#007A87"),len=10)
-group.colors <- c("#37AFA9","blue","#F6893D","red")
+# group.colors <- c("#37AFA9","blue","#F6893D","red")
+group.colors <- c("black","blue","darkgreen","red")
 
 dir_fig <- paste0("output_figure")
 
@@ -66,14 +68,16 @@ values.radar <- paste0(grid.values*100,'%')
 
 # legend.groups <- c("Control: w/ Mic","Control: w/o Mic","Warming: w/ Mic","Warming: w/o Mic")
 
+# title1 <- "(a)  Parameter Uncertainty: Coefficient of Variation"
 title1 <- "Parameter Uncertainty: Coefficient of Variation"
 size_title <- 18
 size_axis <- 12
 
-fn <- paste0(path_out,"/ggradar2_output.png")
+# fn <- paste0(path_out,"/ggradar2_output.png")
+fn <- paste0(path_out,"/ggradar3_output.pdf")
 # png(fn, width=8, height=8, units='in', res=600)
 
-sp <- ggradar2(plot.data=par, 
+sp <- ggradar3(plot.data=par, 
 	axis.labels = par_label, axis.label.size=6,
 	grid.min=grid.min, grid.max=grid.max, grid.n=grid.n,
 	grid.values=grid.values, values.radar=values.radar,
@@ -91,8 +95,9 @@ sp <- ggradar2(plot.data=par,
 		legend.spacing.x=unit(2,'line')
 		)
 
-print(sp)
-# dev.off()
+# print(sp)
+ggsave(filename=fn, plot=sp,width=25,height=25,units="cm", dpi=300)	
+
 
 
 
