@@ -7,6 +7,8 @@
 #' (1) add variable 'grid.n' = number of grids/circles; 
 #' (2) allow to generate multiple (>3) girds/circles (ggradar only generate 3 circles: min/mid/max)
 #' (3) allow to assign 'expression' to 'axis.labels', e.g., superscript, subscript, bolditalic
+#' (4) delete "font.radar" to avoid errors in "font" when plot is saved to a file
+
 #' based on ggradar developed by Ricardo Bion
 #' https://github.com/ricardo-bion/ggradar.git
 #' @export ggradar
@@ -16,7 +18,6 @@
 
 ggradar2 <- function(plot.data,
                          base.size=15, 
-                         font.radar="Arial",
                          grid.n=6,
                          grid.values=NULL,
                          values.radar = c("0%", "60%", "120%"),                  
@@ -246,7 +247,7 @@ axis.labels2 <- axis.labels1[axis_id]
 # print(axis.labels2)
 base <- ggplot(axis$label) + xlab(NULL) + ylab(NULL) + coord_equal() +
   geom_text(data=subset(axis$label,axis$label$x < (-x.centre.range)),
-            aes(x=x,y=y),label=axis.labels2,size=axis.label.size,hjust=1, family=font.radar) +
+            aes(x=x,y=y),label=axis.labels2,size=axis.label.size,hjust=1) +
   scale_x_continuous(limits=c(-1.5*plot.extent.x,1.5*plot.extent.x)) + 
   scale_y_continuous(limits=c(-plot.extent.y,plot.extent.y))
 
@@ -255,7 +256,7 @@ base <- ggplot(axis$label) + xlab(NULL) + ylab(NULL) + coord_equal() +
 for(i in 1:grid.n){
   base <- base + geom_path(data=gridline$path[[i]],aes(x=x,y=y),
                           lty=grid.line.linetype,colour=grid.line.colour[i],size=grid.line.width) 
-  base <- base + geom_text(aes(x=x,y=y,label=text,fontface='bold'),data=gridline$label[[i]],size=grid.label.size*0.8, hjust=1, family=font.radar) 
+  base <- base + geom_text(aes(x=x,y=y,label=text,fontface='bold'),data=gridline$label[[i]],size=grid.label.size*0.8, hjust=1) 
 
   }
 
@@ -264,13 +265,13 @@ for(i in 1:grid.n){
   axis.labels2 <- axis.labels1[axis_id]
   # print(axis.labels2)
   base <- base + geom_text(data=subset(axis$label,abs(axis$label$x)<=x.centre.range),
-                           aes(x=x,y=y),label=axis.labels2,size=axis.label.size,hjust=0.5, family=font.radar)
+                           aes(x=x,y=y),label=axis.labels2,size=axis.label.size,hjust=0.5)
   # + axis labels for any vertical axes [x>x.centre.range]
   axis_id <- which(axis$label$x>x.centre.range)
   axis.labels2 <- axis.labels1[axis_id]
   # print(axis.labels2)
   base <- base + geom_text(data=subset(axis$label,axis$label$x>x.centre.range),
-                           aes(x=x,y=y),label=axis.labels2,size=axis.label.size,hjust=0, family=font.radar)
+                           aes(x=x,y=y),label=axis.labels2,size=axis.label.size,hjust=0)
   # + theme_clear [to remove grey plot background, grid lines, axis tick marks and axis text]
   base <- base + theme_clear
   #  + background circle against which to plot radar data
@@ -299,7 +300,7 @@ for(i in 1:grid.n){
   # ... + centre.y label if required [i.e. value of y at centre of plot circle]
   if (label.centre.y==TRUE) {
     centre.y.label <- data.frame(x=0, y=0, text=as.character(centre.y))
-    base <- base + geom_text(aes(x=x,y=y,label=text),data=centre.y.label,size=grid.label.size, hjust=0.5, family=font.radar) }
+    base <- base + geom_text(aes(x=x,y=y,label=text),data=centre.y.label,size=grid.label.size, hjust=0.5) }
 
   if (!is.null(group.colours)){
     colour_values=rep(group.colours,100)
@@ -308,12 +309,11 @@ for(i in 1:grid.n){
                        "#00D1C1", "#FFAA91", "#B4A76C", "#9CA299", "#565A5C", "#00A04B", "#E54C20"), 100)
   }
   
-  base <- base + theme(legend.key.width=unit(3,"line")) + theme(text = element_text(size = 20,
-                                                                                      family = font.radar)) +
+  base <- base + theme(legend.key.width=unit(3,"line")) + theme(text = element_text(size = 20)) +
   theme(legend.text = element_text(size = legend.text.size), legend.position = legend.position) +
   theme(legend.key.height=unit(2,"line")) +
   scale_colour_manual(values=colour_values) +
-  theme(text=element_text(family=font.radar)) + 
+  # theme(text=element_text(family=font.radar)) + 
   theme(legend.title=element_blank())
 
   if (plot.title != "") {

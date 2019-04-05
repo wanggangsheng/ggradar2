@@ -10,12 +10,12 @@
 #' based on ggradar developed by Ricardo Bion
 
 # setwd("/Users/wgs/ownCloud/Rcode/ggradar2")
-# source("ggradar3_test.R")
+# source("ggradar2_test.R")
 
 #Clean up Environment
 rm(list = ls())
 library(ggplot2)
-source("ggradar3.R")
+source("ggradar2.R")
 
 path <- getwd()
 dir_io <- "input_data"
@@ -73,11 +73,9 @@ title1 <- "Parameter Uncertainty: Coefficient of Variation"
 size_title <- 18
 size_axis <- 12
 
-# fn <- paste0(path_out,"/ggradar2_output.png")
-fn <- paste0(path_out,"/ggradar3_output.pdf")
-# png(fn, width=8, height=8, units='in', res=600)
+fn <- paste0(path_out,"/ggradar2_output.pdf")
 
-sp <- ggradar3(plot.data=par, 
+sp <- ggradar2(plot.data=par, 
 	axis.labels = par_label, axis.label.size=6,
 	grid.min=grid.min, grid.max=grid.max, grid.n=grid.n,
 	grid.values=grid.values, values.radar=values.radar,
